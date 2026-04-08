@@ -2,4 +2,5 @@
 *.pem
 *.key
 dist/
-mdm-server
+# Built binary when compiled at module root (go build -o mdm-server)
+/mdm-server
