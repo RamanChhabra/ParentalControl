@@ -1,0 +1,25 @@
+name: ios_screen_time_tools
+description: >-
+  Fork of ios_screen_time_tools with native handlers for selectAppsToDiscourage,
+  encourageAll, and getScreenTimeData (upstream pub 0.0.13 only registered permission methods).
+version: 0.0.13+parental1
+publish_to: "none"
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: IosScreenTimeToolsPlugin

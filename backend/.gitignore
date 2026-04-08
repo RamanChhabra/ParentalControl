@@ -1,0 +1,11 @@
+# Do not commit Firebase service account key
+serviceAccount.json
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+
+file/service-key.json
+**/service-key.json

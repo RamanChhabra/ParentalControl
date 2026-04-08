@@ -1,0 +1,43 @@
+name: parental_control_app
+description: Parental control app - Child and Parent flows with Firebase.
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.2.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: ^3.6.0
+  firebase_auth: ^5.3.1
+  cloud_firestore: ^5.4.4
+  # firebase_messaging: ^14.7.10  # Disabled for web compatibility; add back for push on mobile
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
+  flutter_background_service: ^5.0.5
+  usage_stats: ^1.3.1
+  call_log: ^6.0.1
+  flutter_device_apps: ^0.6.0
+  # Android: after "flutter pub get", run scripts/patch_telephony.sh (adds namespace for AGP).
+  telephony: ^0.2.0
+  webview_flutter: ^4.4.2
+  provider: ^6.1.1
+  go_router: ^13.0.0
+  intl: ^0.19.0
+  uuid: ^4.2.2
+  shared_preferences: ^2.2.2
+  url_launcher: ^6.2.5
+  flutter_local_notifications: ^17.2.4
+  # Local fork: upstream 0.0.13 never implemented selectAppsToDiscourage / encourageAll on iOS
+  # (MissingPluginException). This package adds FamilyActivityPicker + ManagedSettings shields.
+  ios_screen_time_tools:
+    path: packages/ios_screen_time_tools
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true
