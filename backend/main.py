@@ -1,6 +1,7 @@
 """
 Parental Control Backend - FastAPI + Firebase Admin.
-Setup: Place Firebase service account JSON as backend/serviceAccount.json
+Setup: Set GOOGLE_APPLICATION_CREDENTIALS to your Firebase service account JSON path,
+       or place backend/file/service-key.json locally (never commit it).
 Run: python3 -m uvicorn main:app --reload
       (or: ./run.sh)
 """
@@ -22,7 +23,9 @@ async def lifespan(app: FastAPI):
         import firebase_admin
         from firebase_admin import credentials, firestore
         from google.cloud.firestore_v1 import Query
-        cred_path = os.path.join(os.path.dirname(__file__), "file/service-key.json")
+        cred_path = os.environ.get("GOOGLE_APPLICATION_CREDENTIALS") or os.path.join(
+            os.path.dirname(__file__), "file", "service-key.json"
+        )
         if os.path.exists(cred_path):
             cred = credentials.Certificate(cred_path)
             firebase_app = firebase_admin.initialize_app(cred)
