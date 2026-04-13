@@ -2,6 +2,7 @@ package config
 
 import (
 	"os"
+	"path/filepath"
 )
 
 // Config holds runtime settings for the MDM HTTP server and enrollment URLs.
@@ -19,6 +20,8 @@ type Config struct {
 	// Sign enrollment profiles with your identity cert (PEM paths); empty = serve template only for inspection.
 	SignCertFile string
 	SignKeyFile  string
+	// ParentalCaCertFile is the PEM/DER public CA path served at /parental/filtering-ca.crt for the child app (HTTPS filtering trust).
+	ParentalCaCertFile string
 }
 
 func LoadFromEnv() (Config, error) {
@@ -34,7 +37,21 @@ func LoadFromEnv() (Config, error) {
 	if c.PublicBaseURL == "" {
 		c.PublicBaseURL = "https://127.0.0.1:8443"
 	}
+	c.ParentalCaCertFile = resolveParentalCaCertPath()
 	return c, nil
+}
+
+func resolveParentalCaCertPath() string {
+	p := os.Getenv("MDM_PARENTAL_CA_CERT")
+	if p != "" {
+		return p
+	}
+	// Default: certs/parental-filtering-ca.crt next to cwd when running from mdm-server/.
+	def := filepath.Clean("certs/parental-filtering-ca.crt")
+	if st, err := os.Stat(def); err == nil && !st.IsDir() {
+		return def
+	}
+	return ""
 }
 
 func getenv(key, def string) string {

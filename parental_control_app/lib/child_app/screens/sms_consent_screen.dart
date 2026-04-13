@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../trackers/sms_tracker.dart';
 
 /// Child must accept disclosure before SMS can be shared with parent. Android only.
@@ -49,10 +48,5 @@ class SmsConsentScreen extends StatelessWidget {
         ],
       ),
     );
-  }
-
-  static Future<String?> _getDeviceId(BuildContext context) async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('child_device_id');
   }
 }

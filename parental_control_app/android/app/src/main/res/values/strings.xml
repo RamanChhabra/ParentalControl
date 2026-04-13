@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">Parental Control</string>
     <string name="device_admin_label">Parental Control</string>
     <string name="device_admin_description">Allows blocking apps on this device when set as device owner.</string>
+    <string name="accessibility_service_description">Parental Control uses Accessibility to monitor what’s on your screen and help keep this device safe when your parent enables supervision.</string>
+    <string name="accessibility_service_summary">Supervision and safety when your parent turns these features on.</string>
 </resources>

@@ -18,6 +18,7 @@ import '../../shared/utils/ios_screen_time_helper.dart';
 import '../../shared/models/rules_model.dart';
 import '../../shared/utils/blocked_app_notification.dart';
 import '../../shared/utils/device_owner_helper.dart';
+import 'android_child_setup_screen.dart';
 
 const _prefBlockedPackages = 'blocked_packages_json';
 
@@ -33,6 +34,8 @@ class _ChildHomeScreenState extends State<ChildHomeScreen> with WidgetsBindingOb
   bool _paired = false;
   bool _isLoading = true;
   bool _smsConsent = false;
+  /// When false on Android, show [AndroidChildSetupScreen] instead of the home list.
+  bool _androidSetupDone = true;
   StreamSubscription<RulesModel>? _rulesSubscription;
 
   @override
@@ -95,11 +98,17 @@ class _ChildHomeScreenState extends State<ChildHomeScreen> with WidgetsBindingOb
       final device = await firestore.getDeviceByDeviceId(id);
       if (!mounted) return;
       final smsConsent = isAndroid ? await SmsTracker.hasConsent() : false;
-      if (mounted) setState(() {
-        _paired = device != null;
-        _isLoading = false;
-        _smsConsent = smsConsent;
-      });
+      final androidSetupDone = isAndroid
+          ? (prefs.getBool(androidChildSetupWizardDoneKey) ?? false)
+          : true;
+      if (mounted) {
+        setState(() {
+          _paired = device != null;
+          _isLoading = false;
+          _smsConsent = smsConsent;
+          _androidSetupDone = androidSetupDone;
+        });
+      }
       if (_paired && mounted) {
         if (!kIsWeb) LocationTracker.startIfNeeded(context, deviceId: id);
         if (isAndroid) {
@@ -153,6 +162,19 @@ class _ChildHomeScreenState extends State<ChildHomeScreen> with WidgetsBindingOb
         ),
       );
     }
+    if (isAndroid && !_androidSetupDone) {
+      return AndroidChildSetupScreen(
+        onFinished: () async {
+          final prefs = await SharedPreferences.getInstance();
+          await prefs.setBool(androidChildSetupWizardDoneKey, true);
+          if (mounted) {
+            setState(() {
+              _androidSetupDone = true;
+            });
+          }
+        },
+      );
+    }
     return Scaffold(
       appBar: AppBar(title: const Text('Parental Control')),
       body: ListView(
@@ -165,6 +187,22 @@ class _ChildHomeScreenState extends State<ChildHomeScreen> with WidgetsBindingOb
               subtitle: Text('Location and app usage are shared with your parent.'),
             ),
           ),
+          if (isAndroid)
+            ListTile(
+              leading: const Icon(Icons.shield_outlined),
+              title: const Text('Device protection setup'),
+              subtitle: const Text('Review usage, battery, and other permissions like in guided setup.'),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setBool(androidChildSetupWizardDoneKey, false);
+                if (mounted) {
+                  setState(() {
+                    _androidSetupDone = false;
+                  });
+                }
+              },
+            ),
           const SizedBox(height: 16),
           ListTile(
             leading: const Icon(Icons.location_on),

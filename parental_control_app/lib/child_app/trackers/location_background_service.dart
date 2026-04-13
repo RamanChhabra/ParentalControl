@@ -8,7 +8,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:usage_stats/usage_stats.dart';
@@ -25,7 +24,7 @@ const _blockedNotificationTitle = 'App blocked by parent';
 const _blockedNotificationContent = 'This app is blocked by your parent. Do not use this app.';
 
 /// Channel used by BackgroundService (Java) for openApp. Must match plugin.
-final _bgChannel = MethodChannel(
+const _bgChannel = MethodChannel(
   'id.flutter/background_service_android_bg',
   JSONMethodCodec(),
 );
